@@ -1,6 +1,12 @@
 {
   "name": "parser",
+  "license": "MIT",
   "packageManager": "yarn@3.4.1",
+  "scripts": {
+    "build:lib": "yarn workspace calc-parser build",
+    "lint:lib": "yarn workspace calc-parser lint",
+    "test:lib": "yarn workspace calc-parser test"
+  },
   "workspaces": [
     "packages/*"
   ]
