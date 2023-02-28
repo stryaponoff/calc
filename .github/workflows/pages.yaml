@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: ${{ inputs.name }}
-          path: ${{ runner.temp }}/packages/demo/dist
+          path: packages/demo/dist
           retention-days: ${{ inputs.retention-days }}
 
   deploy:
