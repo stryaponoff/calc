@@ -13,14 +13,16 @@ jobs:
           node-version: 18.x
 
       - uses: actions/cache@v3
+        id: deps-cache
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          path: .yarn/cache
+          key: modules-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Install dependencies
+      - name: Install dependencies 🚚
         run: yarn install --immutable
 
-      - name: Run tests
+      - name: Run tests 🧪
+        id: tests
         run: yarn test
 
       - name: Set unit test coverage

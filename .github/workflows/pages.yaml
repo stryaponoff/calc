@@ -37,11 +37,10 @@ jobs:
         run: yarn build
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-pages-artifact@v1
         with:
           name: github-pages
           path: packages/demo/dist
-          retention-days: ${{ inputs.retention-days }}
 
   deploy:
     needs:
