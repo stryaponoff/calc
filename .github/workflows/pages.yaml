@@ -9,19 +9,23 @@ jobs:
   deps:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@main
       - name: Use Node.js 18.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@main
         with:
           node-version: 18.x
-
-      - uses: actions/cache@v3
+      - uses: actions/cache@main
         with:
           path: .yarn/cache
           key: modules-${{ hashFiles('**/yarn.lock') }}
-
       - name: Install dependencies 🚚
         run: yarn install --immutable
+      - name: Upload artifacts
+        uses: actions/upload-artifact@main
+        with:
+          name: node_modules
+          path: |
+            node_modules
 
   lint:
     needs: deps
@@ -43,6 +47,12 @@ jobs:
     steps:
       - name: Build 🛠️
         run: yarn build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@main
+        with:
+          name: ${{ inputs.name }}
+          path: ${{ runner.temp }}/packages/demo/dist
+          retention-days: ${{ inputs.retention-days }}
 
   deploy:
     needs:
@@ -60,13 +70,6 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - name: Upload artifact
-        uses: actions/upload-artifact@main
-        with:
-          name: ${{ inputs.name }}
-          path: ${{ runner.temp }}/packages/demo/dist
-          retention-days: ${{ inputs.retention-days }}
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
