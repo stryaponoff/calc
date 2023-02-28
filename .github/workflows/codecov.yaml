@@ -1,13 +1,14 @@
-name: Tests
+name: Codecov Coverage
 
 on: [push]
 
 jobs:
-  test:
+  set-codecov-test-coverage:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
         with:
           node-version: 18.x
 
@@ -16,11 +17,14 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Install dependencies 🚚
+      - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Lint 🔍
-        run: yarn lint
-
-      - name: Run tests 🧪
+      - name: Run tests
         run: yarn test
+
+      - name: Set unit test coverage
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true

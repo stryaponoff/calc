@@ -2,6 +2,7 @@
   <div class="container">
     <div class="col">
       <textarea v-model="code"></textarea>
+      <div>Result: {{ result }}</div>
     </div>
     <div class="col">
       <vue-json-pretty v-if="!parsed.isError" :data="parsed.value" />
@@ -13,7 +14,7 @@
 <script lang="ts">
 import VueJsonPretty from 'vue-json-pretty';
 import 'vue-json-pretty/lib/styles.css';
-import { Parser } from 'calc-parser';
+import { Interpreter, Parser } from 'calc-parser';
 import { computed, defineComponent, ref } from "vue";
 
 export default defineComponent({
@@ -22,6 +23,7 @@ export default defineComponent({
   },
   setup() {
     const parser = new Parser()
+    const interpreter = new Interpreter()
 
     const code = ref('')
     const parsed = computed(() => {
@@ -39,9 +41,18 @@ export default defineComponent({
       }
     })
 
+    const result = computed(() => {
+      if (!parsed.value.isError) {
+        return interpreter.eval(parsed.value.value as any)
+      }
+
+      return null
+    })
+
     return {
       code,
       parsed,
+      result,
     }
   }
 })
