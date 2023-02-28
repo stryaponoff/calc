@@ -6,47 +6,36 @@ on:
       - main
 
 jobs:
-  deps:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v3
+
       - name: Use Node.js 18.x
         uses: actions/setup-node@main
         with:
           node-version: 18.x
-      - uses: actions/cache@main
+
+      - uses: actions/cache@v3
+        id: deps-cache
         with:
           path: .yarn/cache
           key: modules-${{ hashFiles('**/yarn.lock') }}
+
       - name: Install dependencies 🚚
         run: yarn install --immutable
-      - name: Upload artifacts
-        uses: actions/upload-artifact@main
-        with:
-          name: node_modules
-          path: |
-            node_modules
 
-  lint:
-    needs: deps
-    runs-on: ubuntu-latest
-    steps:
       - name: Lint 🔍
+        id: lint
         run: yarn lint
 
-  test:
-    needs: deps
-    runs-on: ubuntu-latest
-    steps:
       - name: Run tests 🧪
+        id: tests
         run: yarn test
 
-  build:
-    needs: deps
-    runs-on: ubuntu-latest
-    steps:
       - name: Build 🛠️
         run: yarn build
+
       - name: Upload artifacts
         uses: actions/upload-artifact@main
         with:
@@ -56,8 +45,6 @@ jobs:
 
   deploy:
     needs:
-      - lint
-      - test
       - build
 
     permissions:
