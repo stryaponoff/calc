@@ -5,7 +5,6 @@
   "scripts": {
     "lint": "run-s lint:lib",
     "test": "run-s test:lib",
-
     "build:lib": "yarn workspace calc-parser build",
     "lint:lib": "yarn workspace calc-parser lint",
     "test:lib": "yarn workspace calc-parser test"
