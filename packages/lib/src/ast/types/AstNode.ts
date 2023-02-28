@@ -1,7 +1,7 @@
 import type { BinaryOperator } from '@/types/BinaryOperator'
 
-type AbstractAstNode<
-  T extends string,
+export type AbstractAstNode<
+  T extends string = string,
   P extends Record<string, unknown> = Record<never, never>
 > = {
   type: T

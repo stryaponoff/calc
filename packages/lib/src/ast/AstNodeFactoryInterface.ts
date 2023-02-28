@@ -4,9 +4,9 @@ import type {
   ExpressionStatementNode,
   ProgramNode,
   StatementNode, BinaryExpressionNode,
-} from '@/ast/AstNode'
+} from '@/ast/types/AstNode'
 import type { BinaryOperator } from '@/types/BinaryOperator'
-import type { LiteralNode } from '@/ast/AstNode'
+import type { LiteralNode } from '@/ast/types/AstNode'
 
 export interface AstNodeFactoryInterface {
   program(statementList: StatementNode[]): ProgramNode

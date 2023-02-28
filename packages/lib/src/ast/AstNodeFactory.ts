@@ -5,9 +5,9 @@ import type {
   LiteralNode,
   NumericLiteralNode,
   StatementNode
-} from '@/ast/AstNode'
-import type { EmptyStatementNode } from '@/ast/AstNode'
-import type { ProgramNode } from '@/ast/AstNode'
+} from '@/ast/types/AstNode'
+import type { EmptyStatementNode } from '@/ast/types/AstNode'
+import type { ProgramNode } from '@/ast/types/AstNode'
 import type { BinaryOperator } from '@/types/BinaryOperator'
 
 export class AstNodeFactory implements AstNodeFactoryInterface {

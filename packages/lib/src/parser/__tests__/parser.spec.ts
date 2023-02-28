@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { Parser } from '@/parser/parser'
-import type { ProgramNode } from '@/ast/AstNode'
+import type { ProgramNode } from '@/ast/types/AstNode'
 import { UnexpectedLiteralError } from '@/errors/UnexpectedLiteralError'
 import { UnexpectedEndOfInputError } from '@/errors/UnexpectedEndOfInputError'
 

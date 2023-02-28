@@ -13,7 +13,7 @@ import type {
   ExpressionStatementNode,
   LiteralNode,
   NumericLiteralNode
-} from '@/ast/AstNode'
+} from '@/ast/types/AstNode'
 
 export class Parser implements ParserInterface {
   private astNodeFactory: AstNodeFactoryInterface = new AstNodeFactory()
