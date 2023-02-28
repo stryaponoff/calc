@@ -21,8 +21,8 @@ jobs:
 
       - uses: actions/cache@v3
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          path: .yarn/cache
+          key: modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install dependencies 🚚
         run: yarn install --immutable
