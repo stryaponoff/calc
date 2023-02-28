@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  VITE_BASE: ${{ vars.VITE_BASE }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
