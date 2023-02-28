@@ -23,25 +23,31 @@ jobs:
       - name: Install dependencies 🚚
         run: yarn install --immutable
 
-  test:
+  lint:
     needs: deps
     runs-on: ubuntu-latest
     steps:
       - name: Lint 🔍
         run: yarn lint
 
+  test:
+    needs: deps
+    runs-on: ubuntu-latest
+    steps:
       - name: Run tests 🧪
         run: yarn test
 
   build:
-    needs: test
+    needs: deps
     runs-on: ubuntu-latest
     steps:
       - name: Build 🛠️
         run: yarn build
 
   deploy:
-    needs: build
+    needs:
+      - test
+      - build
 
     permissions:
       pages: write
