@@ -46,6 +46,7 @@ jobs:
 
   deploy:
     needs:
+      - lint
       - test
       - build
 
