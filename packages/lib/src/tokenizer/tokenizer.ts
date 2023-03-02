@@ -18,14 +18,20 @@ export class Tokenizer implements TokenizerInterface {
   } satisfies TokenizerSpecification
 
   public * tokenize(input: string): Generator<Token, null> {
-    let iterator = 0
+    let lastCursor = -1
     let cursor = 0
 
     while (cursor < input.length) {
-      if (iterator++ > 0 && cursor === 0) {
-        // We're on non-first iteration of the loop but cursor is still in zero position
-        // Exiting to prevent the infinite loop
+      if (lastCursor >= cursor) {
+        /*
+         * If we're here then we've executed one iteration of loop without incrementing the cursor.
+         * This means we got and unknown token and further continuing make no sense and will result
+         * in an infinite loop
+         */
+
         return null
+      } else {
+        lastCursor = cursor
       }
 
       for (const tokenType in Tokenizer.spec) {

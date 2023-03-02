@@ -35,6 +35,14 @@ describe('Tokenizer', () => {
       it('#2', () => {
         runTest('a', [])
       })
+
+      it('#3', () => {
+        runTest('123abc', [{ type: TokenType.Number, value: '123' }])
+      })
+
+      it('#4', () => {
+        runTest('abc123', [])
+      })
     })
 
     describe('simple math expression', () => {
