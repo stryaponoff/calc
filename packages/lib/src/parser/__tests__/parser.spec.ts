@@ -81,6 +81,21 @@ describe('Parser', () => {
         ]
       })
     })
+
+    it('numeric literal with leading zeros', () => {
+      runTest('00042', {
+        type: 'Program',
+        body: [
+          {
+            type: 'ExpressionStatement',
+            expression: {
+              type: 'NumericLiteral',
+              value: 42,
+            },
+          },
+        ]
+      })
+    })
   })
 
   describe('math', () => {
