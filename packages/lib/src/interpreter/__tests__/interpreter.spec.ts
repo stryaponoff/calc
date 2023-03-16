@@ -25,6 +25,10 @@ describe('Interpreter', () => {
       runTest('2 + 2', 4)
     })
 
+    it('Add negative', () => {
+      runTest('2 + (-2)', 0)
+    })
+
     it('Subtract', () => {
       runTest('2 - 10', -8)
     })

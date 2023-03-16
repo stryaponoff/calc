@@ -1,4 +1,4 @@
-import { isBinaryOperator, isRecord } from '@/types/guards'
+import { isBinaryOperator, isRecord, isUnaryOperator } from '@/types/guards'
 import type {
   AbstractAstNode,
   AstNodeType,
@@ -7,6 +7,7 @@ import type {
   ExpressionStatementNode,
   NumericLiteralNode,
   ProgramNode,
+  UnaryExpressionNode,
 } from '@/ast/types/AstNode'
 
 const isAstNode = <T extends AstNodeType>(value: unknown, type?: T): value is AbstractAstNode<T, Record<string, unknown>> => {
@@ -24,7 +25,7 @@ export const isEmptyStatementNode = (value: unknown): value is EmptyStatementNod
   return isAstNode(value, 'EmptyStatement')
 }
 
-export const isExpresionStatementNode = (value: unknown): value is ExpressionStatementNode => {
+export const isExpressionStatementNode = (value: unknown): value is ExpressionStatementNode => {
   return isAstNode(value, 'ExpressionStatement')
     && isAstNode(value.expression)
 }
@@ -34,6 +35,12 @@ export const isBinaryExpressionNode = (value: unknown): value is BinaryExpressio
     && isBinaryOperator(value.operator)
     && typeof value.left !== 'undefined'
     && typeof value.right !== 'undefined'
+}
+
+export const isUnaryExpressionNode = (value: unknown): value is UnaryExpressionNode => {
+  return isAstNode(value, 'UnaryExpression')
+    && isUnaryOperator(value.operator)
+    && typeof value.argument !== 'undefined'
 }
 
 export const isNumericLiteralNode = (value: unknown): value is NumericLiteralNode => {

@@ -4,11 +4,13 @@ import type {
   ExpressionStatementNode,
   LiteralNode,
   NumericLiteralNode,
-  StatementNode
+  StatementNode,
+  UnaryExpressionNode
 } from '@/ast/types/AstNode'
 import type { EmptyStatementNode } from '@/ast/types/AstNode'
 import type { ProgramNode } from '@/ast/types/AstNode'
 import type { BinaryOperator } from '@/types/BinaryOperator'
+import type { UnaryOperator } from '@/types/UnaryOperator'
 
 export class AstNodeFactory implements AstNodeFactoryInterface {
   public program(statementList: StatementNode[]): ProgramNode {
@@ -48,6 +50,17 @@ export class AstNodeFactory implements AstNodeFactoryInterface {
       operator,
       left,
       right,
+    }
+  }
+
+  public unaryExpression<O extends UnaryOperator>(
+    operator: O,
+    argument: LiteralNode | UnaryExpressionNode
+  ): UnaryExpressionNode<O> {
+    return {
+      type: 'UnaryExpression',
+      operator,
+      argument,
     }
   }
 }

@@ -5,13 +5,15 @@ import type {
   NumericLiteralNode,
   ProgramNode,
   StatementNode,
+  UnaryExpressionNode,
 } from '@/ast/types/AstNode'
 import {
   isBinaryExpressionNode,
   isEmptyStatementNode,
-  isExpresionStatementNode,
+  isExpressionStatementNode,
   isNumericLiteralNode,
-  isProgramNode
+  isProgramNode,
+  isUnaryExpressionNode
 } from '@/ast/types/guards'
 import { AbsurdError } from '@/errors/AbsurdError'
 import type { AstNode } from '@/ast/types/AstNode'
@@ -19,19 +21,21 @@ import type { AstNode } from '@/ast/types/AstNode'
 export class Interpreter {
   public eval(ast: ProgramNode): Array<number | null>
   public eval(ast: EmptyStatementNode): null
-  public eval(ast: NumericLiteralNode | StatementNode | BinaryExpressionNode): number
+  public eval(ast: NumericLiteralNode | StatementNode | BinaryExpressionNode | UnaryExpressionNode): number
   public eval(ast: AstNode): null | number | Array<number | null>
   public eval(ast: AstNode) {
     if (isProgramNode(ast)) {
       return ast.body.map(expression => this.eval(expression))
     } else if (isEmptyStatementNode(ast)) {
       return this.evalEmptyStatement(ast)
-    } else if (isExpresionStatementNode(ast)) {
+    } else if (isExpressionStatementNode(ast)) {
       return this.evalExpressionStatement(ast)
     } else if (isNumericLiteralNode(ast)) {
       return this.evalNumericLiteral(ast)
     } else if (isBinaryExpressionNode(ast)) {
       return this.evalBinaryExpression(ast)
+    } else if (isUnaryExpressionNode(ast)) {
+      return this.evalUnaryExpression(ast)
     } else {
       throw new AbsurdError(ast)
     }
@@ -58,6 +62,16 @@ export class Interpreter {
         return left * right
       case '/':
         return left / right
+      default:
+        throw new AbsurdError(node.operator)
+    }
+  }
+
+  public evalUnaryExpression(node: UnaryExpressionNode) {
+    const argument = this.eval(node.argument)
+    switch (node.operator) {
+      case '-':
+        return -argument
       default:
         throw new AbsurdError(node.operator)
     }

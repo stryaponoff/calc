@@ -12,8 +12,10 @@ import type {
   EmptyStatementNode,
   ExpressionStatementNode,
   LiteralNode,
-  NumericLiteralNode
+  NumericLiteralNode,
+  UnaryExpressionNode,
 } from '@/ast/types/AstNode'
+import { isUnaryOperator } from '@/types/guards'
 
 export class Parser implements ParserInterface {
   private astNodeFactory: AstNodeFactoryInterface = new AstNodeFactory()
@@ -95,7 +97,7 @@ export class Parser implements ParserInterface {
     return this.additiveExpression()
   }
 
-  private additiveExpression(): LiteralNode | BinaryExpressionNode {
+  private additiveExpression(): LiteralNode | UnaryExpressionNode | BinaryExpressionNode {
     let left = this.multiplicativeExpression()
 
     while (this.lookahead.type === TokenType.AddOperator) {
@@ -107,7 +109,7 @@ export class Parser implements ParserInterface {
     return left
   }
 
-  private multiplicativeExpression(): LiteralNode | BinaryExpressionNode {
+  private multiplicativeExpression(): LiteralNode | UnaryExpressionNode | BinaryExpressionNode {
     let left = this.primaryExpression()
 
     while (this.lookahead.type === TokenType.MultiplyOperator) {
@@ -119,10 +121,21 @@ export class Parser implements ParserInterface {
     return left
   }
 
+  private unaryExpression() {
+    const operator = this.consume(TokenType.AddOperator).value
+    if (!isUnaryOperator(operator)) {
+      throw new UnexpectedTokenError(TokenType.AddOperator, TokenType.Number)
+    }
+
+    return this.astNodeFactory.unaryExpression(operator, this.literal())
+  }
+
   private primaryExpression() {
     switch (this.lookahead.type) {
       case TokenType.OpeningParenthesis:
         return this.parenthesizedExpression()
+      case TokenType.AddOperator:
+        return this.unaryExpression()
       default:
         return this.literal()
     }

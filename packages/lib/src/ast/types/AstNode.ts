@@ -1,4 +1,5 @@
 import type { BinaryOperator } from '@/types/BinaryOperator'
+import type { UnaryOperator } from '@/types/UnaryOperator'
 
 export type AbstractAstNode<
   T extends string = string,
@@ -20,12 +21,21 @@ export type StatementNode =
   | EmptyStatementNode
   | ExpressionStatementNode
 
+export type BinaryExpressionNodeArgument = LiteralNode | UnaryExpressionNode | BinaryExpressionNode
 export type BinaryExpressionNode<
   O extends BinaryOperator = BinaryOperator
 > = AbstractAstNode<'BinaryExpression', {
   operator: O
-  left: LiteralNode | BinaryExpressionNode
-  right: LiteralNode | BinaryExpressionNode
+  left: BinaryExpressionNodeArgument
+  right: BinaryExpressionNodeArgument
+}>
+
+export type UnaryExpressionNodeArgument = LiteralNode | UnaryExpressionNode
+export type UnaryExpressionNode<
+  O extends UnaryOperator = UnaryOperator
+> = AbstractAstNode<'UnaryExpression', {
+  operator: O
+  argument: UnaryExpressionNodeArgument
 }>
 
 export type ProgramNode = AbstractAstNode<'Program', { body: StatementNode[] }>
@@ -35,5 +45,6 @@ export type AstNode =
   | LiteralNode
   | StatementNode
   | BinaryExpressionNode
+  | UnaryExpressionNode
 
 export type AstNodeType = AstNode['type']

@@ -207,6 +207,33 @@ describe('Parser', () => {
         ]
       })
     })
+
+    it('negative term', () => {
+      runTest('2 + (-3)', {
+        type: 'Program',
+        body: [
+          {
+            type: 'ExpressionStatement',
+            expression: {
+              type: 'BinaryExpression',
+              operator: '+',
+              left: {
+                type: 'NumericLiteral',
+                value: 2,
+              },
+              right: {
+                type: 'UnaryExpression',
+                operator: '-',
+                argument: {
+                  type: 'NumericLiteral',
+                  value: 3,
+                },
+              },
+            }
+          }
+        ]
+      })
+    })
   })
 
   describe('errors', () => {
