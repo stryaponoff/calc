@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { Parser } from '@/parser/parser'
 import type { ProgramNode } from '@/ast/types/AstNode'
 import { UnexpectedLiteralError } from '@/errors/UnexpectedLiteralError'
@@ -16,12 +16,14 @@ describe('Parser', () => {
     it('empty statement', () => {
       runTest('', {
         type: 'Program',
-        body: [{ type: 'EmptyStatement' }]
+        body: [{ type: 'EmptyStatement', start: 0, end: 0 }],
+        start: 0,
+        end: 0,
       })
     })
 
-    describe('single statement', () => {
-      const singleExpectedAst = {
+    it('multiple empty statements', () => {
+      runTest('1;;;;', {
         type: 'Program',
         body: [
           {
@@ -29,17 +31,62 @@ describe('Parser', () => {
             expression: {
               type: 'NumericLiteral',
               value: 1,
+              start: 0,
+              end: 1,
             },
+            start: 0,
+            end: 2,
           },
-        ]
-      } satisfies ProgramNode
+          { type: 'EmptyStatement', start: 2, end: 3 },
+          { type: 'EmptyStatement', start: 3, end: 4 },
+          { type: 'EmptyStatement', start: 4, end: 5 },
+        ],
+        start: 0,
+        end: 5,
+      })
+    })
 
+    describe('single statement', () => {
       it('w/o semicolon', () => {
-        runTest('1', singleExpectedAst)
+        runTest('1', {
+          type: 'Program',
+          body: [
+            {
+              type: 'ExpressionStatement',
+              expression: {
+                type: 'NumericLiteral',
+                value: 1,
+                start: 0,
+                end: 1,
+              },
+              start: 0,
+              end: 1,
+            },
+          ],
+          start: 0,
+          end: 1,
+        })
       })
 
       it('with semicolon', () => {
-        runTest('1;', singleExpectedAst)
+        runTest('1;', {
+          type: 'Program',
+          body: [
+            {
+              type: 'ExpressionStatement',
+              expression: {
+                type: 'NumericLiteral',
+                value: 1,
+                start: 0,
+                end: 1,
+              },
+              start: 0,
+              end: 2,
+            },
+          ],
+          start: 0,
+          end: 2,
+        })
       })
 
       it('with semicolon', () => {
@@ -51,16 +98,26 @@ describe('Parser', () => {
               expression: {
                 type: 'NumericLiteral',
                 value: 1,
+                start: 0,
+                end: 1,
               },
+              start: 0,
+              end: 2,
             },
             {
               type: 'ExpressionStatement',
               expression: {
                 type: 'NumericLiteral',
                 value: 2,
+                start: 2,
+                end: 3,
               },
+              start: 2,
+              end: 3,
             },
-          ]
+          ],
+          start: 0,
+          end: 3,
         })
       })
     })
@@ -76,9 +133,15 @@ describe('Parser', () => {
             expression: {
               type: 'NumericLiteral',
               value: 42,
+              start: 0,
+              end: 2,
             },
+            start: 0,
+            end: 2,
           },
-        ]
+        ],
+        start: 0,
+        end: 2,
       })
     })
 
@@ -91,9 +154,15 @@ describe('Parser', () => {
             expression: {
               type: 'NumericLiteral',
               value: 42,
+              start: 0,
+              end: 5,
             },
+            start: 0,
+            end: 5,
           },
-        ]
+        ],
+        start: 0,
+        end: 5,
       })
     })
   })
@@ -111,14 +180,24 @@ describe('Parser', () => {
               left: {
                 type: 'NumericLiteral',
                 value: 2,
+                start: 0,
+                end: 1,
               },
               right: {
                 type: 'NumericLiteral',
                 value: 3,
+                start: 4,
+                end: 5,
               },
-            }
+              start: 0,
+              end: 5,
+            },
+            start: 0,
+            end: 5,
           }
-        ]
+        ],
+        start: 0,
+        end: 5,
       })
     })
 
@@ -137,19 +216,33 @@ describe('Parser', () => {
                 left: {
                   type: 'NumericLiteral',
                   value: 2,
+                  start: 0,
+                  end: 1,
                 },
                 right: {
                   type: 'NumericLiteral',
                   value: 3,
+                  start: 4,
+                  end: 5,
                 },
+                start: 0,
+                end: 5,
               },
               right: {
                 type: 'NumericLiteral',
                 value: 1,
+                start: 8,
+                end: 9,
               },
-            }
+              start: 0,
+              end: 9,
+            },
+            start: 0,
+            end: 9,
           }
-        ]
+        ],
+        start: 0,
+        end: 9,
       })
     })
 
@@ -168,63 +261,159 @@ describe('Parser', () => {
                 left: {
                   type: 'NumericLiteral',
                   value: 1,
+                  start: 0,
+                  end: 1,
                 },
                 right: {
                   type: 'NumericLiteral',
                   value: 2,
+                  start: 4,
+                  end: 5,
                 },
+                start: 0,
+                end: 5,
               },
               right: {
                 type: 'NumericLiteral',
                 value: 3,
+                start: 8,
+                end: 9,
               },
-            }
+              start: 0,
+              end: 9,
+            },
+            start: 0,
+            end: 9,
           }
-        ]
+        ],
+        start: 0,
+        end: 9,
+      })
+    })
+
+    it('simple parenthesised expression', () => {
+      runTest('(1+2)', {
+        type: 'Program',
+        body: [
+          {
+            type: 'ExpressionStatement',
+            expression: {
+              type: 'BinaryExpression',
+              operator: '+',
+              left: {
+                type: 'NumericLiteral',
+                value: 1,
+                start: 1,
+                end: 2,
+              },
+              right: {
+                type: 'NumericLiteral',
+                value: 2,
+                start: 3,
+                end: 4,
+              },
+              start: 1,
+              end: 5,
+            },
+            start: 0,
+            end: 5,
+          }
+        ],
+        start: 0,
+        end: 5,
+      })
+
+      runTest('((1+2))', {
+        type: 'Program',
+        body: [
+          {
+            type: 'ExpressionStatement',
+            expression: {
+              type: 'BinaryExpression',
+              operator: '+',
+              left: {
+                type: 'NumericLiteral',
+                value: 1,
+                start: 2,
+                end: 3,
+              },
+              right: {
+                type: 'NumericLiteral',
+                value: 2,
+                start: 4,
+                end: 5,
+              },
+              start: 2,
+              end: 7,
+            },
+            start: 0,
+            end: 7,
+          }
+        ],
+        start: 0,
+        end: 7,
       })
     })
 
     it('parenthesised expression', () => {
       runTest('1 + (2 - 3) + 4', {
-        'type': 'Program',
-        'body': [
+        type: 'Program',
+        body: [
           {
-            'type': 'ExpressionStatement',
-            'expression': {
-              'type': 'BinaryExpression',
-              'operator': '+',
-              'left': {
-                'type': 'BinaryExpression',
-                'operator': '+',
-                'left': {
-                  'type': 'NumericLiteral',
-                  'value': 1,
+            type: 'ExpressionStatement',
+            expression: {
+              type: 'BinaryExpression',
+              operator: '+',
+              left: {
+                type: 'BinaryExpression',
+                operator: '+',
+                left: {
+                  type: 'NumericLiteral',
+                  value: 1,
+                  start: 0,
+                  end: 1,
                 },
-                'right': {
-                  'type': 'BinaryExpression',
-                  'operator': '-',
-                  'left': {
-                    'type': 'NumericLiteral',
-                    'value': 2,
+                right: {
+                  type: 'BinaryExpression',
+                  operator: '-',
+                  left: {
+                    type: 'NumericLiteral',
+                    value: 2,
+                    start: 5,
+                    end: 6,
                   },
-                  'right': {
-                    'type': 'NumericLiteral',
-                    'value': 3,
-                  }
-                }
+                  right: {
+                    type: 'NumericLiteral',
+                    value: 3,
+                    start: 9,
+                    end: 10,
+                  },
+                  start: 5,
+                  end: 11,
+                },
+                start: 0,
+                end: 11,
               },
-              'right': {
-                'type': 'NumericLiteral',
-                'value': 4,
-              }
-            }
+              right: {
+                type: 'NumericLiteral',
+                value: 4,
+                start: 14,
+                end: 15,
+              },
+              start: 0,
+              end: 15,
+            },
+            start: 0,
+            end: 15,
           }
-        ]
+        ],
+        start: 0,
+        end: 15,
       })
     })
 
     it('negative term', () => {
-      runTest('2 + (-3)', {
+      runTest('2+(-3)', {
         type: 'Program',
         body: [
           {
@@ -235,6 +424,8 @@ describe('Parser', () => {
               left: {
                 type: 'NumericLiteral',
                 value: 2,
+                start: 0,
+                end: 1,
               },
               right: {
                 type: 'UnaryExpression',
@@ -242,11 +433,21 @@ describe('Parser', () => {
                 argument: {
                   type: 'NumericLiteral',
                   value: 3,
+                  start: 4,
+                  end: 5,
                 },
+                start: 3,
+                end: 6,
               },
-            }
+              start: 0,
+              end: 6,
+            },
+            start: 0,
+            end: 6,
           }
-        ]
+        ],
+        start: 0,
+        end: 6,
       })
     })
   })

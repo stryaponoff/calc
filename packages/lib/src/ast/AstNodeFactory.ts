@@ -13,54 +13,70 @@ import type { BinaryOperator } from '@/types/BinaryOperator'
 import type { UnaryOperator } from '@/types/UnaryOperator'
 
 export class AstNodeFactory implements AstNodeFactoryInterface {
-  public program(statementList: StatementNode[]): ProgramNode {
+  public program(statementList: StatementNode[], start: number, end: number): ProgramNode {
     return {
       type: 'Program',
       body: statementList,
+      start,
+      end,
     }
   }
 
-  public emptyStatement(): EmptyStatementNode {
+  public emptyStatement(start: number, end: number): EmptyStatementNode {
     return {
-      type: 'EmptyStatement'
+      type: 'EmptyStatement',
+      start,
+      end,
     }
   }
 
-  public numericLiteral(value: number): NumericLiteralNode {
+  public numericLiteral(value: number, start: number, end: number): NumericLiteralNode {
     return {
       type: 'NumericLiteral',
       value: Number(value),
+      start,
+      end,
     }
   }
 
-  public expressionStatement<T>(expression: T): ExpressionStatementNode<T> {
+  public expressionStatement<T>(expression: T, start: number, end: number): ExpressionStatementNode<T> {
     return {
       type: 'ExpressionStatement',
       expression,
-    } as ExpressionStatementNode<T>
+      start,
+      end,
+    }
   }
 
   public binaryExpression<O extends BinaryOperator>(
     operator: O,
     left: LiteralNode | BinaryExpressionNode,
-    right: LiteralNode | BinaryExpressionNode
+    right: LiteralNode | BinaryExpressionNode,
+    start: number,
+    end: number,
   ): BinaryExpressionNode<O> {
     return {
       type: 'BinaryExpression',
       operator,
       left,
       right,
+      start,
+      end,
     }
   }
 
   public unaryExpression<O extends UnaryOperator>(
     operator: O,
-    argument: LiteralNode | UnaryExpressionNode
+    argument: LiteralNode | UnaryExpressionNode,
+    start: number,
+    end: number,
   ): UnaryExpressionNode<O> {
     return {
       type: 'UnaryExpression',
       operator,
       argument,
+      start,
+      end,
     }
   }
 }

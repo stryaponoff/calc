@@ -6,6 +6,8 @@ export type AbstractAstNode<
   P extends Record<string, unknown> = Record<never, never>
 > = {
   type: T
+  start: number
+  end: number
 } & P
 
 export type NumericLiteralNode = AbstractAstNode<'NumericLiteral', {

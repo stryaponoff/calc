@@ -51,7 +51,11 @@ export class Parser implements ParserInterface {
   }
 
   private program() {
-    return this.astNodeFactory.program(this.statementList())
+    const statements = this.statementList()
+    const start = statements[0].start
+    const end = statements[statements.length - 1].end
+
+    return this.astNodeFactory.program(statements, start, end)
   }
 
   private statementList() {
@@ -74,23 +78,28 @@ export class Parser implements ParserInterface {
   }
 
   private emptyStatement(): EmptyStatementNode {
-    this.consume(TokenType.Semicolon)
-    return this.astNodeFactory.emptyStatement()
+    const token = this.consume(TokenType.Semicolon)
+    return this.astNodeFactory.emptyStatement(token.start, token.end)
   }
 
   private expressionStatement<T = unknown>(): ExpressionStatementNode<T> {
-    const expression = this.expression() as T
+    // Get cursor position before consuming any tokens
+    const start = this.lookahead.start
 
-    this.consume(TokenType.Semicolon)
-    return this.astNodeFactory.expressionStatement(expression)
+    const expression = this.expression() as unknown as T & { start: number; end: number }
+    const semicolon = this.consume(TokenType.Semicolon)
+    return this.astNodeFactory.expressionStatement(expression, start, semicolon.end)
   }
 
   private parenthesizedExpression() {
     this.consume(TokenType.OpeningParenthesis)
     const expression = this.expression()
-    this.consume(TokenType.ClosingParenthesis)
+    const cp = this.consume(TokenType.ClosingParenthesis)
 
-    return expression
+    return {
+      ...expression,
+      end: cp.end,
+    }
   }
 
   private expression() {
@@ -98,36 +107,44 @@ export class Parser implements ParserInterface {
   }
 
   private additiveExpression(): LiteralNode | UnaryExpressionNode | BinaryExpressionNode {
+    const start = this.lookahead.start
+
     let left = this.multiplicativeExpression()
 
     while (this.lookahead.type === TokenType.AddOperator) {
       const operator = this.consume(TokenType.AddOperator).value
       const right = this.multiplicativeExpression()
-      left = this.astNodeFactory.binaryExpression(operator, left, right)
+      const end = right.end
+      left = this.astNodeFactory.binaryExpression(operator, left, right, start, end)
     }
 
     return left
   }
 
   private multiplicativeExpression(): LiteralNode | UnaryExpressionNode | BinaryExpressionNode {
+    const start = this.lookahead.start
     let left = this.primaryExpression()
 
     while (this.lookahead.type === TokenType.MultiplyOperator) {
       const operator = this.consume(TokenType.MultiplyOperator).value
       const right = this.primaryExpression()
-      left = this.astNodeFactory.binaryExpression(operator, left, right)
+      const end = right.end
+      left = this.astNodeFactory.binaryExpression(operator, left, right, start, end)
     }
 
     return left
   }
 
   private unaryExpression() {
+    const start = this.lookahead.start
     const operator = this.consume(TokenType.AddOperator).value
     if (!isUnaryOperator(operator)) {
       throw new UnexpectedTokenError(TokenType.AddOperator, TokenType.Number)
     }
+    const literal = this.literal()
+    const end = this.lookahead.start
 
-    return this.astNodeFactory.unaryExpression(operator, this.literal())
+    return this.astNodeFactory.unaryExpression(operator, literal, start, end)
   }
 
   private primaryExpression() {
@@ -154,6 +171,6 @@ export class Parser implements ParserInterface {
 
   private numericLiteral(): NumericLiteralNode {
     const token = this.consume(TokenType.Number)
-    return this.astNodeFactory.numericLiteral(Number(token.value))
+    return this.astNodeFactory.numericLiteral(Number(token.value), token.start, token.end)
   }
 }
