@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { Parser } from '@/parser/parser'
-import type { ProgramNode } from '@/ast/types/AstNode'
+import type { LiteralNode, ProgramNode } from '@/ast/types/AstNode'
 import { UnexpectedLiteralError } from '@/errors/UnexpectedLiteralError'
 import { UnexpectedEndOfInputError } from '@/errors/UnexpectedEndOfInputError'
 
@@ -30,6 +30,7 @@ describe('Parser', () => {
             type: 'ExpressionStatement',
             expression: {
               type: 'NumericLiteral',
+              raw: '1',
               value: 1,
               start: 0,
               end: 1,
@@ -55,6 +56,7 @@ describe('Parser', () => {
               type: 'ExpressionStatement',
               expression: {
                 type: 'NumericLiteral',
+                raw: '1',
                 value: 1,
                 start: 0,
                 end: 1,
@@ -76,17 +78,18 @@ describe('Parser', () => {
               type: 'ExpressionStatement',
               expression: {
                 type: 'NumericLiteral',
+                raw: '1',
                 value: 1,
                 start: 0,
                 end: 1,
-              },
+              } satisfies LiteralNode,
               start: 0,
               end: 2,
             },
           ],
           start: 0,
           end: 2,
-        })
+        } satisfies ProgramNode)
       })
 
       it('with semicolon', () => {
@@ -97,6 +100,7 @@ describe('Parser', () => {
               type: 'ExpressionStatement',
               expression: {
                 type: 'NumericLiteral',
+                raw: '1',
                 value: 1,
                 start: 0,
                 end: 1,
@@ -108,6 +112,7 @@ describe('Parser', () => {
               type: 'ExpressionStatement',
               expression: {
                 type: 'NumericLiteral',
+                raw: '2',
                 value: 2,
                 start: 2,
                 end: 3,
@@ -132,6 +137,7 @@ describe('Parser', () => {
             type: 'ExpressionStatement',
             expression: {
               type: 'NumericLiteral',
+              raw: '42',
               value: 42,
               start: 0,
               end: 2,
@@ -153,6 +159,7 @@ describe('Parser', () => {
             type: 'ExpressionStatement',
             expression: {
               type: 'NumericLiteral',
+              raw: '00042',
               value: 42,
               start: 0,
               end: 5,
@@ -179,12 +186,14 @@ describe('Parser', () => {
               operator: '+',
               left: {
                 type: 'NumericLiteral',
+                raw: '2',
                 value: 2,
                 start: 0,
                 end: 1,
               },
               right: {
                 type: 'NumericLiteral',
+                raw: '3',
                 value: 3,
                 start: 4,
                 end: 5,
@@ -215,12 +224,14 @@ describe('Parser', () => {
                 operator: '+',
                 left: {
                   type: 'NumericLiteral',
+                  raw: '2',
                   value: 2,
                   start: 0,
                   end: 1,
                 },
                 right: {
                   type: 'NumericLiteral',
+                  raw: '3',
                   value: 3,
                   start: 4,
                   end: 5,
@@ -230,6 +241,7 @@ describe('Parser', () => {
               },
               right: {
                 type: 'NumericLiteral',
+                raw: '1',
                 value: 1,
                 start: 8,
                 end: 9,
@@ -260,12 +272,14 @@ describe('Parser', () => {
                 operator: '*',
                 left: {
                   type: 'NumericLiteral',
+                  raw: '1',
                   value: 1,
                   start: 0,
                   end: 1,
                 },
                 right: {
                   type: 'NumericLiteral',
+                  raw: '2',
                   value: 2,
                   start: 4,
                   end: 5,
@@ -275,6 +289,7 @@ describe('Parser', () => {
               },
               right: {
                 type: 'NumericLiteral',
+                raw: '3',
                 value: 3,
                 start: 8,
                 end: 9,
@@ -302,12 +317,14 @@ describe('Parser', () => {
               operator: '+',
               left: {
                 type: 'NumericLiteral',
+                raw: '1',
                 value: 1,
                 start: 1,
                 end: 2,
               },
               right: {
                 type: 'NumericLiteral',
+                raw: '2',
                 value: 2,
                 start: 3,
                 end: 4,
@@ -333,12 +350,14 @@ describe('Parser', () => {
               operator: '+',
               left: {
                 type: 'NumericLiteral',
+                raw: '1',
                 value: 1,
                 start: 2,
                 end: 3,
               },
               right: {
                 type: 'NumericLiteral',
+                raw: '2',
                 value: 2,
                 start: 4,
                 end: 5,
@@ -369,6 +388,7 @@ describe('Parser', () => {
                 operator: '+',
                 left: {
                   type: 'NumericLiteral',
+                  raw: '1',
                   value: 1,
                   start: 0,
                   end: 1,
@@ -378,12 +398,14 @@ describe('Parser', () => {
                   operator: '-',
                   left: {
                     type: 'NumericLiteral',
+                    raw: '2',
                     value: 2,
                     start: 5,
                     end: 6,
                   },
                   right: {
                     type: 'NumericLiteral',
+                    raw: '3',
                     value: 3,
                     start: 9,
                     end: 10,
@@ -396,6 +418,7 @@ describe('Parser', () => {
               },
               right: {
                 type: 'NumericLiteral',
+                raw: '4',
                 value: 4,
                 start: 14,
                 end: 15,
@@ -423,6 +446,7 @@ describe('Parser', () => {
               operator: '+',
               left: {
                 type: 'NumericLiteral',
+                raw: '2',
                 value: 2,
                 start: 0,
                 end: 1,
@@ -432,6 +456,7 @@ describe('Parser', () => {
                 operator: '-',
                 argument: {
                   type: 'NumericLiteral',
+                  raw: '3',
                   value: 3,
                   start: 4,
                   end: 5,

@@ -171,6 +171,6 @@ export class Parser implements ParserInterface {
 
   private numericLiteral(): NumericLiteralNode {
     const token = this.consume(TokenType.Number)
-    return this.astNodeFactory.numericLiteral(Number(token.value), token.start, token.end)
+    return this.astNodeFactory.numericLiteral(token.value, token.start, token.end)
   }
 }

@@ -12,6 +12,7 @@ export type AbstractAstNode<
 
 export type NumericLiteralNode = AbstractAstNode<'NumericLiteral', {
   value: number
+  raw: string
 }>
 
 export type LiteralNode =

@@ -30,10 +30,11 @@ export class AstNodeFactory implements AstNodeFactoryInterface {
     }
   }
 
-  public numericLiteral(value: number, start: number, end: number): NumericLiteralNode {
+  public numericLiteral(rawValue: string, start: number, end: number): NumericLiteralNode {
     return {
       type: 'NumericLiteral',
-      value: Number(value),
+      value: Number(rawValue),
+      raw: rawValue,
       start,
       end,
     }
