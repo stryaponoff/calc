@@ -49,8 +49,10 @@ export class Tokenizer implements TokenizerInterface {
           }
 
           yield {
-            type: tokenType,
+            type: tokenType as TokenType,
             value: value,
+            start: cursor - value.length,
+            end: cursor,
           } as Token
 
           if (tokenType === TokenType.Semicolon && input.slice(cursor) === '') {
@@ -70,6 +72,8 @@ export class Tokenizer implements TokenizerInterface {
     yield {
       type: TokenType.Semicolon,
       value: '',
+      start: cursor,
+      end: cursor,
     }
 
     return null

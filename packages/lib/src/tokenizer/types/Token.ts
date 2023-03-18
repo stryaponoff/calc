@@ -4,6 +4,8 @@ import type { BinaryOperator } from '@/types/BinaryOperator'
 export type AbstractToken<Type extends TokenType, Value extends string = string> = {
   type: Type
   value: Value
+  start: number
+  end: number
 }
 
 export type NumericLiteralToken = AbstractToken<TokenType.Number>
