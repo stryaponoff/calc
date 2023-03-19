@@ -15,9 +15,30 @@ export class Renderer {
       switch (token.type) {
         case TokenType.Number:
           return acc + spaces + `<span class="token number">${token.value}</span>`
-        case TokenType.AddOperator:
-        case TokenType.MultiplyOperator:
-          return acc + spaces + `<span class="token operator add-operator">${token.value}</span>`
+        case TokenType.AddOperator: {
+          let value: string
+          if (token.value === '+') {
+            value = '&plus;'
+          } else if (token.value === '-') {
+            value = '&minus;'
+          } else {
+            value = token.value
+          }
+
+          return acc + spaces + `<span class="token operator add">${value}</span>`
+        }
+        case TokenType.MultiplyOperator: {
+          let value: string
+          if (token.value === '*') {
+            value = '&times;'
+          } else if (token.value === '/') {
+            value = '&divide;'
+          } else {
+            value = token.value
+          }
+
+          return acc + spaces + `<span class="token operator multiply">${value}</span>`
+        }
         case TokenType.OpeningParenthesis:
         case TokenType.ClosingParenthesis:
           return acc + spaces + `<span class="token paren">${token.value}</span>`
