@@ -49,7 +49,7 @@ export default defineComponent({
     const parser = new Parser()
     const interpreter = new Interpreter()
 
-    const code = ref('1 + (2 - 3) + 4')
+    const code = ref('42')
     const parsed = computed(() => {
       try {
         const value = parser.parse(code.value)
