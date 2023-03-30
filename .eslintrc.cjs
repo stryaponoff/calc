@@ -6,7 +6,8 @@ module.exports = {
   ],
   extends: [
     'eslint:recommended',
-    'plugin:@typescript-eslint/recommended'
+    'plugin:@typescript-eslint/recommended',
+    'plugin:vue/vue3-recommended',
   ],
   rules: {
     'indent': ['error', 2, { SwitchCase: 1 }],
@@ -18,6 +19,8 @@ module.exports = {
     '@typescript-eslint/no-shadow': ['error'],
     'no-shadow': 'off',
     'no-undef': 'off',
+    'keyword-spacing': 'error',
+    'switch-colon-spacing': 'error',
     '@typescript-eslint/explicit-member-accessibility': ['error', {
       accessibility: 'explicit',
       overrides: {
@@ -28,6 +31,6 @@ module.exports = {
         parameterProperties: 'explicit',
       },
     }],
-    '@typescript-eslint/consistent-type-imports': ['error', {prefer: 'type-imports'}],
+    '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
   },
 }

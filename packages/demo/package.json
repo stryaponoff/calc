@@ -14,7 +14,10 @@
     "vue-json-pretty": "^2.2.3"
   },
   "devDependencies": {
+    "@rushstack/eslint-patch": "^1.2.0",
     "@vitejs/plugin-vue": "^4.1.0",
+    "@vue/eslint-config-typescript": "^11.0.2",
+    "eslint-plugin-vue": "^9.10.0",
     "sass": "^1.59.3",
     "typescript": "^5.0.2",
     "vite": "^4.2.0",
