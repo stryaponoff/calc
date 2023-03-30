@@ -241,5 +241,10 @@ export default defineComponent({
   :deep(.paren) {
     color: var(--paren-color);
   }
+
+  :deep(.token.operator) {
+    display: inline-block;
+    padding: 0 .3rem;
+  }
 }
 </style>
