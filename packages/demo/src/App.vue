@@ -7,25 +7,17 @@
         </div>
         <div class="row">
           <div class="col">
-            <textarea v-model="code"></textarea>
-            <div>Result: {{ result }}</div>
+            <editor v-model="code" />
           </div>
           <div class="col">
-            <vue-json-pretty v-if="!parsed.isError" :data="parsed.value" />
-            <code class="has-error" v-else>{{ parsed.value }}</code>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <div class="row">
-          <h2>Editor Component</h2>
-        </div>
-        <div class="row">
-          <div class="col">
-            <editor />
+            <vue-json-pretty
+              v-if="!parsed.isError"
+              :data="parsed.value"
+            />
+            <code
+              v-else
+              class="has-error"
+            >{{ parsed.value }}</code>
           </div>
         </div>
       </div>
@@ -34,10 +26,10 @@
 </template>
 
 <script lang="ts">
-import VueJsonPretty from 'vue-json-pretty';
-import 'vue-json-pretty/lib/styles.css';
-import { Interpreter, Parser } from 'calc-parser';
-import { computed, defineComponent, ref } from "vue";
+import VueJsonPretty from 'vue-json-pretty'
+import 'vue-json-pretty/lib/styles.css'
+import { Interpreter, Parser } from 'calc-parser'
+import { computed, defineComponent, ref } from 'vue'
 import Editor from '@/components/Editor.vue'
 
 export default defineComponent({
